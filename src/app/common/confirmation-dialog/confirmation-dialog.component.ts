@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { PaginationService } from '../pagination.service';
 
 @Component({
@@ -10,14 +10,10 @@ export class ConfirmationDialogComponent {
   @ViewChild('myButton') myButton!: ElementRef;
   @ViewChild('checkBox') checkBox!: ElementRef;
 
-  @Output() fireYes = new EventEmitter<boolean>();
-  @Output() fireNo = new EventEmitter<boolean>();
+  constructor(private paging: PaginationService) {}
 
-  constructor(private paging: PaginationService) {
-    // handle modal-dialog open
-    this.paging.canOpen.subscribe((val) => {
-      this.triggerClick();
-    });
+  ngAfterViewInit() {
+    this.triggerClick();
   }
 
   triggerClick() {
@@ -28,14 +24,14 @@ export class ConfirmationDialogComponent {
   triggerClose(evt: Event) {
     let el: HTMLInputElement = this.checkBox.nativeElement;
     el.click();
-    this.fireNo.emit(false);
+    this.paging.modalOpen(0)
     return false;
   }
 
   triggerYes(evt: Event) {
     let el: HTMLInputElement = this.checkBox.nativeElement;
     el.click();
-    this.fireYes.emit(true);
+    this.paging.modalOpen(1)
     return false;
   }
 }

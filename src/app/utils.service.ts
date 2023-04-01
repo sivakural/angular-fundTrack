@@ -7,8 +7,8 @@ import { ICalender } from './utils';
   providedIn: 'root'
 })
 export class UtilsService {
-  host = "https://fundtrack.onrender.com";
-  // host = 'http://192.168.1.5:8080'
+  // host = "https://fundtrack.onrender.com";
+  host = 'http://192.168.1.5:8080'
   sendURL = this.host + "/entry";
   listURL = this.host + "/tracklist";
   getURL = this.host + "/getentry";

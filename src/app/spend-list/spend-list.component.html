@@ -40,7 +40,7 @@
                         <p>Following things purchased....</p>
                         <div class="left-side">
                             <p *ngFor="let item of shownonSubCategorey(list['things'])">
-                                {{ item['categorey'] + ":" + item['categorey_value']}}
+                                {{ item['categorey'] + ":" + (item['categorey_value'] | currency: 'INR' : 'symbol' : '1.0-0') }}
                             </p>
                         </div>
                         <div class="right-side">
@@ -48,7 +48,7 @@
                                 {{ item['categorey'] + ":"}}
                                 <ul>
                                     <li *ngFor="let subItem of item['subcategories']; let k=index">{{
-                                        subItem.subcategorey + ":" + subItem.subcategorey_value }}</li>
+                                        subItem.subcategorey + ":" + (subItem.subcategorey_value | currency: 'INR' : 'symbol' : '1.0-0') }}</li>
                                 </ul>
                             </div>
                         </div>

@@ -17,7 +17,8 @@ export class ConverterStringPipe implements PipeTransform {
         stringData = stringData.concat(')');
       }
       stringData = stringData.concat(((value.length - 1) == induxum) ? '' : ',');
-    })
+    });
+    stringData = stringData.replace(/,,/g, ',');
     return stringData;
   }
 

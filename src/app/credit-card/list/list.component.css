@@ -10,6 +10,7 @@ table {
     text-align: left;
     display: block;
     overflow-x: auto;
+    table-layout: fixed;
 }
 
 tr {
@@ -56,6 +57,12 @@ caption {
     background-color: cadetblue;
     color: #fff;
     cursor: pointer;
+}
+
+.last-column{
+    text-align: center; 
+    cursor: pointer; 
+    font-size: 14px;
 }
 
 /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */

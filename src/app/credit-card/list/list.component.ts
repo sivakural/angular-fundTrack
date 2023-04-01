@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { ConfirmationDialogComponent } from 'src/app/common/confirmation-dialog/confirmation-dialog.component';
+import { HostDirective } from 'src/app/common/host.directive';
 import { PaginationService } from 'src/app/common/pagination.service';
 import { UtilsService } from 'src/app/utils.service';
 
@@ -14,7 +16,18 @@ export class ListComponent {
   listToShow: any[] = [];
   deleteData: any;
 
-  constructor(private utils: UtilsService, private router: Router, private paging: PaginationService) { }
+  @ViewChild(HostDirective, { static: true }) appHost!: HostDirective;
+  
+
+  constructor(private utils: UtilsService, private router: Router, private paging: PaginationService) { 
+     // handle modal-dialog open
+     this.paging.canOpen.subscribe((val: any) => {
+      this.handleDelete(val);
+
+      // remove modal-dialog component after done with box.
+      this.appHost.viewContainerRef.remove();
+    });
+  }
 
   ngOnInit() {
     this.initialCalls();
@@ -59,16 +72,20 @@ export class ListComponent {
     event.stopPropagation();
 
     this.deleteData = data;
-    this.paging.modalOpen(1);
+
+    // Create modal-dialog when delete record.
+    const viewContainerRef = this.appHost.viewContainerRef;
+    viewContainerRef.clear();
+    viewContainerRef.createComponent(ConfirmationDialogComponent);
   }
 
-  handleDelete(val: boolean) {
+  handleDelete(val: any) {
     if (val) {
       this.utils.deleteCreditCardUse(this.deleteData).subscribe(() => {
         console.log("successfully deleted...");
         this.listToShow = [];
         this.initialCalls();
-      })
+      });
     }
   }
 }

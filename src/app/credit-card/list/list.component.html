@@ -27,7 +27,7 @@
                     <td>{{ list.date | date: 'dd/MM' }}</td>
                     <td>{{ list.reason || (list.mode | titlecase) }}</td>
                     <td style="color: palevioletred;">{{ list.amount | currency: 'INR' : 'symbol' : '1.0-0' }}</td>
-                    <td *ngIf="!list.mode" style="text-align: center;"><i class="fa fa-trash" aria-hidden="true" (click)="deleteRecord($event, list)"></i></td>
+                    <td *ngIf="!list.mode" class="last-column"><i class="fa fa-trash" aria-hidden="true" (click)="deleteRecord($event, list)"></i></td>
                 </tr>
             </ng-container>
         </tbody>
@@ -44,4 +44,5 @@
     </div>
 </div>
 
-<app-confirmation-dialog (fireYes)="handleDelete($event)" (fireNo)="handleDelete($event)"></app-confirmation-dialog>
+<!-- render confirmation dialog dynamically -->
+<ng-template appHost></ng-template>

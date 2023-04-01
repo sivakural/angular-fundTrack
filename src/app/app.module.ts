@@ -19,6 +19,7 @@ import { ListComponent } from './credit-card/list/list.component';
 import { AddComponent } from './credit-card/add/add.component';
 import { PaginationComponent } from './common/pagination/pagination.component';
 import { ConfirmationDialogComponent } from './common/confirmation-dialog/confirmation-dialog.component';
+import { HostDirective } from './common/host.directive';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +34,8 @@ import { ConfirmationDialogComponent } from './common/confirmation-dialog/confir
     ListComponent,
     AddComponent,
     PaginationComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    HostDirective
   ],
   imports: [
     BrowserModule,
