@@ -54,6 +54,7 @@ table {
     text-align: left;
     display: table;
     overflow-x: auto;
+    table-layout: fixed;
 }
 
 tr {
@@ -109,11 +110,11 @@ caption {
     }
 
     .purchaseHeaded {
-        width: 80%;
+        width: 70%;
     }
 
     .totalHeaded {
-        width: 10%;
+        width: 20%;
     }
 }
 
