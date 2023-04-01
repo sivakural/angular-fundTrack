@@ -12,10 +12,25 @@ const calList: any[] = ["Day", "Week", "Month", "Year"];
 const monthList: any[] = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
 const insurance: any[] = ["Health", "Car", "Bike", "Mobile", "Laptop", "AC"]
 
-export { categoreyList, amount, medical, maintanence, fuel, travel, bill, maligai, nonveg, calList, buy, monthList, insurance };
+const formKeys: any = {
+    "thingsForm": ['date', 'things'],
+    "creditCardForm": ['date', 'amount', 'reason']
+}
+
+export { categoreyList, amount, medical, maintanence, fuel, travel, bill, maligai, nonveg, calList, buy, monthList, insurance, formKeys };
 
 export interface ICalender {
     type: string,
     month: number,
     year: number
 }
+
+export function formatDate(date: Date) {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+    return [year, month, day].join('-');
+  }

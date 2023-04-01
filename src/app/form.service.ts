@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { formKeys } from './utils';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,7 @@ export class FormService {
     return list;
   }
 
-  public deriveForm(data: any): any {
+  public deriveForm(data: any, formName?: any): any {
     if (Array.isArray(data)) {
       let arrayForm: FormArray = this.fb.array([]);
       data.forEach((val: any) => {
@@ -47,11 +48,15 @@ export class FormService {
     } else {
       let baseForm: FormGroup = this.fb.group({});
       Object.keys(data).forEach((val: any) => {
-        if (Array.isArray(data[val])) {
-          baseForm.addControl(val, this.deriveForm(data[val]));
+        if (!formKeys[formName].includes(val)) {
+          delete data[val]
         } else {
-          baseForm.addControl(val, this.fb.control(data[val], [Validators.required]));
-          val == 'date' ? baseForm.get(val)?.disabled : '';
+          if (Array.isArray(data[val])) {
+            baseForm.addControl(val, this.deriveForm(data[val]));
+          } else {
+            baseForm.addControl(val, this.fb.control(data[val], [Validators.required]));
+            val == 'date' ? baseForm.get(val)?.disabled : '';
+          }
         }
       });
       return baseForm;

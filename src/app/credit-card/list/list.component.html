@@ -23,7 +23,7 @@
         </thead>
         <tbody>
             <ng-container *ngFor="let list of listToShow;let i=index">
-                <tr [ngClass]="list.mode?'paymode':''" (click)="gotoEdit(list.date)">
+                <tr [ngClass]="list.mode?'paymode':''" (click)="gotoEdit(list)">
                     <td>{{ list.date | date: 'dd/MM' }}</td>
                     <td>{{ list.reason || (list.mode | titlecase) }}</td>
                     <td style="color: palevioletred;">{{ list.amount | currency: 'INR' : 'symbol' : '1.0-0' }}</td>

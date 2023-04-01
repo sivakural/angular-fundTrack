@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FormService } from 'src/app/form.service';
 import { UtilsService } from 'src/app/utils.service';
+import { formatDate } from '../../utils';
 
 @Component({
   selector: 'app-add',
@@ -12,9 +13,10 @@ import { UtilsService } from 'src/app/utils.service';
 })
 export class AddComponent {
   isEditMode: boolean = false;
-  maxDate: Date = new Date();
+  maxDate: string = new Date().toJSON().split('T')[0];
+
   creditCardForm: FormGroup = new FormGroup({
-    date: new FormControl(new Date(), Validators.required),
+    date: new FormControl(formatDate(new Date()), Validators.required),
     amount: new FormControl('', Validators.required),
     reason: new FormControl('', Validators.required)
   });
@@ -24,10 +26,7 @@ export class AddComponent {
       if (params.selectedDate) {
         this.util.getCreditCardUse(params.selectedDate).subscribe((res) => {
           if (res) {
-            if (res._id) delete res._id;
-            if (res.__v != undefined) delete res.__v;
-            if (res.user) delete res.user;
-            this.creditCardForm = this.formService.deriveForm(res);
+            this.creditCardForm = this.formService.deriveForm(res, 'creditCardForm');
             this.isEditMode = true;
           }
         });

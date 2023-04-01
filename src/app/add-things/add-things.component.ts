@@ -13,7 +13,8 @@ import {
   maligai, 
   nonveg, 
   buy, 
-  insurance
+  insurance,
+  formatDate
 } from '../utils';
 import { FormService } from '../form.service';
 import { Location } from '@angular/common';
@@ -41,9 +42,10 @@ export class AddThingsComponent {
   isCreditAmountExists: boolean = false;
 
   creditCardPayAmount: number = 0;
+  today: string = new Date().toJSON().split('T')[0];
 
   thingsForm: FormGroup = this.fb.group({
-    date: this.fb.control(this.formatDate(new Date()), Validators.required),
+    date: this.fb.control(formatDate(new Date()), Validators.required),
     things: this.fb.array([])
   });
 
@@ -53,7 +55,7 @@ export class AddThingsComponent {
     this.route.queryParams.subscribe((params: any) => {
       if (params.selectedDate) {
         this.utils.getEntry({ date: params.selectedDate }).subscribe(res => {
-          this.thingsForm = this.formService.deriveForm(res);
+          this.thingsForm = this.formService.deriveForm(res, 'thingsForm');
           this.isEditMode = true;
           this.utils.getCreditCardPay(params.selectedDate).subscribe(data => {
             if (data) {
@@ -65,16 +67,6 @@ export class AddThingsComponent {
         this.addthings();
       }
     })
-  }
-
-  private formatDate(date: Date) {
-    const d = new Date(date);
-    let month = '' + (d.getMonth() + 1);
-    let day = '' + d.getDate();
-    const year = d.getFullYear();
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-    return [year, month, day].join('-');
   }
 
   get thingsArr() {
@@ -196,10 +188,12 @@ export class AddThingsComponent {
         if (this.creditCardPayAmount && !this.isCreditAmountExists) {
           // delete credit card pay entry.
           this.utils.deleteCreditCardPay(inputs.date).subscribe(() => {
-            console.log("Successfully deleted credit card entry...")
+            console.log("Successfully deleted credit card entry...");
+            this.goto();
           });
+        } else {
+          this.goto();
         }
-        this.goto();
       });
     } else {
       this.utils.addData(inputs).subscribe(() => {

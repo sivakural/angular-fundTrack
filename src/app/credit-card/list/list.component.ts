@@ -47,8 +47,9 @@ export class ListComponent {
     });
   }
 
-  gotoEdit(date: Date) {
-    const queryParams = { selectedDate: date };
+  gotoEdit(data: any) {
+    if (data.mode) return;
+    const queryParams = { selectedDate: data.date };
     this.router.navigate(["/updateCredit"], { queryParams: queryParams });
   }
 

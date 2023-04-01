@@ -10,7 +10,7 @@
                     <span class="date">{{ creditCardForm.value?.date | date: 'dd/MM/yy'  }}</span>
                 </ng-container>
                 <ng-template #dateEntry>
-                    <input type="date" id="date" name="date" formControlName="date" min="01-01-2023" [max]="maxDate" required>
+                    <input type="date" id="date" name="date" formControlName="date" min="2023-01-01" [max]="maxDate" required>
                 </ng-template>
             </div>
         </div>
