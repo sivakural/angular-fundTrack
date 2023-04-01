@@ -1,0 +1,38 @@
+.pagination {
+    overflow: hidden;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color .3s;
+}
+
+.pagination a.active {
+    background-color: #7d8380;
+    color: white;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+    border-radius: 15px;
+}
+
+.pagination a.active {
+    border-radius: 15px;
+}
+
+.arrow {
+    font-size: 20px;
+    line-height: 13px;
+}
+
+a.disabled {
+    color: gray !important;
+    cursor: not-allowed !important;
+}

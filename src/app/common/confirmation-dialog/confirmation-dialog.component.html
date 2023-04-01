@@ -1,0 +1,14 @@
+<div class="content-wrapper">
+    <label>
+        <span style="opacity: 0;" class="btn" #myButton>Just Click it</span>
+        <input id="check" type="checkbox" #checkBox/>
+        <div class="confirm-modal">
+            <div class="form">
+                <p>Are you sure you want to delete?</p>
+                <button type="button" class="btn" (click)="triggerYes($event)">Yes</button>
+                <button type="button" class="btn" (click)="triggerClose($event)">No</button>
+            </div>
+        </div>
+    </label>
+
+</div>

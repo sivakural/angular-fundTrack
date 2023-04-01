@@ -1,0 +1,7 @@
+<div class="pagination" *ngIf="['Day','Week'].includes(currentCal)">
+    <a class="arrow" *ngIf="renderedQuarter!=3" (click)="paginationHandle(false)">&laquo;</a>
+    <ng-container *ngFor="let month of paginationList; let m = index">
+        <a [ngClass]="{'active': currentMonth==month}" (click)="selectMon(month)"> {{ month }} </a>
+    </ng-container>
+    <a class="arrow" *ngIf="renderedQuarter!=12" (click)="paginationHandle(true)">&raquo;</a>
+</div>

@@ -1,0 +1,64 @@
+<div class="list">
+    <div class="topnav" #topNav id="myTopnav">
+        <ng-container *ngFor="let cal of calList; let i = index">
+            <a [ngClass]="currentCal==cal?'active':''" (click)="activeCal(cal, handleClass(topNav))">{{cal}}</a>
+        </ng-container>
+        <a class="split">
+            <button class="addnewBtn" routerLink="/creditCard-list">Credit Card</button>
+        </a>
+        <a class="split">
+            <button class="addnewBtn" routerLink="/addthings">Add new</button>
+        </a>
+        <a href="javascript:void(0);" class="icon" (click)="handleClass(topNav)">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+    <table>
+        <caption><b> {{ currentCal }}</b> expenses</caption>
+        <thead>
+            <tr>
+                <th class="dateHeaded">
+                    Date
+                </th>
+                <th class="purchaseHeaded">
+                    Purchased Items
+                </th>
+                <th class="totalHeaded">
+                    Total
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let list of listToShow;let i=index">
+                <tr (click)="gotoEdit(list['date'], contentRef)">
+                    <td style="color: green;">{{ list["date"] | date: 'dd/MM' }}</td>
+                    <td style="word-wrap: break-word;">{{ list['things'] | converterString }}</td>
+                    <td style="color: palevioletred; word-wrap: break-word;">{{ list['things'] | converterNumber | currency: 'INR' : 'symbol' : '1.0-0' }}</td>
+                </tr>
+                <tr class="content" #contentRef>
+                    <td colspan="3">
+                        <p>Following things purchased....</p>
+                        <div class="left-side">
+                            <p *ngFor="let item of shownonSubCategorey(list['things'])">
+                                {{ item['categorey'] + ":" + item['categorey_value']}}
+                            </p>
+                        </div>
+                        <div class="right-side">
+                            <div *ngFor="let item of showSubCategorey(list['things'])">
+                                {{ item['categorey'] + ":"}}
+                                <ul>
+                                    <li *ngFor="let subItem of item['subcategories']; let k=index">{{
+                                        subItem.subcategorey + ":" + subItem.subcategorey_value }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+    <p *ngIf="!listToShow.length" class="noRecord">No records found....</p>
+</div>
+
+<!-- Pagination bar -->
+<app-pagination (setMonth)="setCurrentMonth($event)"></app-pagination>

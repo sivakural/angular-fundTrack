@@ -1,0 +1,158 @@
+/* All elements should be border-boxes */
+* {
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 100;
+    color: #8a8a8a;
+}
+
+/*
+    Hide the checkbox, as it's only works as the switch
+    for the confirm-modal.
+  */
+input[type=checkbox] {
+    display: none;
+}
+
+p,
+button,
+.btn {
+    font-size: 14px;
+}
+
+button {
+    outline: none !important;
+}
+
+/* Wraps everyting, nothing special */
+.content-wrapper {
+    width: 100%;
+    // max-width: 100%;
+    padding: 10px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/*
+    The sort of button-ish thingy.
+    It should be wrapped by a label and
+    should be followed by the checkbox.
+  */
+.btn {
+    transition: background-color 0.2s;
+    background-color: transparent;
+    color: #8a8a8a;
+    min-width: 3em;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #8a8a8a;
+    user-select: none;
+    display: inline-block;
+    width: 300px;
+    max-width: 90%;
+    margin: 0 auto;
+
+    &:hover {
+        color: #fafafa;
+        background-color: #8a8a8a;
+    }
+
+    &:active,
+    &:focus {
+        color: #fafafa;
+        background-color: #a0a0a0;
+    }
+}
+
+/*
+    The modal background (the dark-ish overlay),
+    which obviously could be a class instead of a form.
+    
+    For scroll to work as expected, the position is absolute,
+    as position: fixed would not allow the page to scroll when the screen isn't tall enough.
+  */
+.confirm-modal {
+    display: block;
+    pointer-events: none;
+    transition: opacity 0.5s;
+
+    .btn {
+        width: auto;
+        max-width: auto;
+        margin: auto;
+        margin-right: 5px;
+    }
+
+    &::before {
+        /*
+        The shadow/backdrop which also is clickable to close the modal.
+      */
+        content: "";
+        display: block;
+        background-color: rgba(0, 0, 0, 0.4);
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        min-height: 200px;
+        z-index: 99;
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    .form {
+        /*
+        The actual modal.
+  
+        Note: to not have clicks inside the modal
+        bleed through to the label (which would uncheck the checkbox),
+        pointer-events are set to none on the modal.
+      */
+        position: absolute;
+        z-index: 99;
+        top: 30%;
+        transition: transform 0.75s;
+        max-width: 90%;
+        width: 450px;
+        background-color: #fafafa;
+        padding: 20px;
+        left: 50%;
+        transform: translate(-50%, 0);
+        box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.2);
+        color: #080808;
+        border-radius: 5px;
+        pointer-events: none;
+    }
+}
+
+/* Hide the modal when the checkbox isn't checked. */
+input:not(:checked)+.confirm-modal {
+    /* Uncomment this for a sharper switch, which might work better on older browsers. */
+    /* display: none; */
+
+    /*
+      Might be wonky on older browsers, but allows for the fly down.
+      Also does the fade in.
+    */
+    &,
+    & * {
+        opacity: 0;
+    }
+
+    &::before {
+        height: 0;
+        width: 0;
+    }
+}
+
+/* For that cute little fly down effect */
+input:not(:checked)+.confirm-modal .form {
+    transform: translate(-50%, -100px);
+}
+
+/* Allow buttons to be clickable. */
+.confirm-modal button {
+    pointer-events: all;
+}

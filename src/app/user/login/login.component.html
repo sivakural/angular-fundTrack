@@ -1,0 +1,39 @@
+<div class="parentContent">
+  <form method="post" [formGroup]="loginForm" (ngSubmit)="login()">
+    <div class="imgcontainer">
+      <img src="../../../assets/images/male.jpg" alt="Avatar" class="avatar">
+    </div>
+  
+    <div class="container">
+      <label for="uname"><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" name="uname" formControlName="username" autocomplete="off" required>
+      <ng-container *ngIf="loginForm.get('username')?.invalid && (loginForm.get('username')?.dirty || loginForm.get('username')?.touched)">
+        <div class="redMsg" *ngIf="loginForm.get('username')?.errors?.['required']">User name is required</div>
+        <div class="redMsg" *ngIf="loginForm.get('username')?.errors?.['minlength']">User name should be minimum 5 characters</div>
+        <div class="redMsg" *ngIf="loginForm.get('username')?.errors?.['maxlength']">User name should be maximum 50 characters</div>
+      </ng-container>
+  
+      <label for="psw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="psw"formControlName="password" autocomplete="off" required>
+      <ng-container *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)">
+        <div class="redMsg" *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</div>
+        <div class="redMsg" *ngIf="loginForm.get('password')?.errors?.['minlength']">Password should be minimum 5 characters</div>
+        <div class="redMsg" *ngIf="loginForm.get('password')?.errors?.['maxlength']">Password should be maximum 1024 characters</div>
+      </ng-container>
+  
+      <button type="submit" [disabled]="loginForm.invalid">Login</button>
+      <label>
+        <input type="checkbox" checked="checked" name="remember"> Remember me
+      </label>
+    </div>
+  
+    <div class="container" style="background-color:#f1f1f1">
+      <span class="psw">User <a href="#" routerLink="/register">Register</a></span>
+    </div>
+  </form>
+</div>
+
+  <!-- show altert message -->
+  <ng-container *ngIf="showAlert">
+    <app-alert [statement]="alertStment"></app-alert>
+  </ng-container>

@@ -1,0 +1,40 @@
+<p class="title">Credit Card Entry</p>
+<div class="container">
+    <form [formGroup]="creditCardForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="col-25">
+                <label for="date">Date</label>
+            </div>
+            <div class="col-75">
+                <ng-container *ngIf="isEditMode; else dateEntry">
+                    <span class="date">{{ creditCardForm.value?.date | date: 'dd/MM/yy'  }}</span>
+                </ng-container>
+                <ng-template #dateEntry>
+                    <input type="date" id="date" name="date" formControlName="date" min="01-01-2023" [max]="maxDate" required>
+                </ng-template>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="reason">Used For</label>
+            </div>
+            <div class="col-75">
+                <input type="text" id="reason" name="reason" placeholder="Enter reason here...."
+                    formControlName="reason" required autocomplete="off">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="amout">Amount</label>
+            </div>
+            <div class="col-75">
+                <input type="number" id="amout" name="amout" placeholder="Enter amount in numbers.."
+                    formControlName="amount" required>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+            <input type="button" id="cancel" value="Cancel" (click)="goto()">
+            <input type="submit" value="Submit" [disabled]="creditCardForm.invalid">
+        </div>
+    </form>
+</div>

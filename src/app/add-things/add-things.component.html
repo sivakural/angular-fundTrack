@@ -1,0 +1,91 @@
+<p class="title">Add Daily Expenses</p>
+<div class="container">
+    <form [formGroup]="thingsForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="col-25">
+                <label for="date">Date</label>
+            </div>
+            <div class="col-75">
+                <ng-container *ngIf="isEditMode; else dateEntry">
+                    <span class="date">{{ thingsForm.value?.date | date: 'dd/MM/yy' }}</span>
+                </ng-container>
+                <ng-template #dateEntry>
+                    <input type="date" id="date" name="date" formControlName="date" min="01-01-2023">
+                </ng-template>
+            </div>
+        </div>
+        <div formArrayName="things">
+            <div *ngFor="let thing of thingsArr.controls; let i=index">
+                <div [formGroupName]="i">
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="categorey">Item</label>
+                            <span class="closebtn" *ngIf="thingsArr.controls.length > 1"
+                                (click)="removeControl(i)">&times;</span>
+                        </div>
+                        <div class="col-75">
+                            <select name="categorey" id="categorey" formControlName="categorey"
+                                (change)="handleSelection(i)">
+                                <option *ngFor="let option of categoreyList" [value]="option">{{ option }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div *ngIf="getsubcategories(i).controls.length" formArrayName="subcategories">
+                        <div class="subcategories" *ngFor="let sub of getsubcategories(i).controls; let j=index">
+                            <div [formGroupName]="j">
+                                <div class="row">
+                                    <div class="col-25">
+                                        <label for="subcategorey">{{thing.get('categorey')?.value}}</label>
+                                        <span *ngIf="getsubcategories(i).controls.length > 1" class="closebtn" (click)="removeControl(i, j)">&times;</span>
+                                    </div>
+                                    <div class="col-75">
+                                        <select name="subcategorey" id="subcategorey" formControlName="subcategorey"
+                                            (change)="checkSomeKey(sub.get('subcategorey')?.value)">
+                                            <option *ngFor="let subcategorey of getSubCategoriesList(i)"
+                                                [value]="subcategorey">{{ subcategorey }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-25">
+                                        <label for="amout">Amount</label>
+                                    </div>
+                                    <div class="col-75">
+                                        <input type="number" id="amout" name="amout" placeholder="Enter amount in numbers.."
+                                            formControlName="subcategorey_value">
+                                        <label *ngIf="(getsubcategories(i).controls.length - 1) == j">
+                                            <input type="checkbox" name="addsub" (change)="addsubcategories(i)"> {{'Add ' +
+                                            thing.get('categorey')?.value}}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="!getsubcategories(i)?.controls?.length">
+                        <div class="col-25">
+                            <label for="amout">Amount</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="number" id="amout" name="amout" placeholder="Enter amount in numbers.."
+                                formControlName="categorey_value">
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="(thingsArr.controls.length - 1) == i">
+                        <div class="col-25">
+                        </div>
+                        <div class="col-75">
+                            <label>
+                                <input type="checkbox" name="remember" (change)="addthings()"> Add Item
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <input type="button" id="cancel" value="Cancel" (click)="goto()">
+            <input type="submit" value="Submit" [disabled]="thingsForm.invalid">
+        </div>
+    </form>
+</div>

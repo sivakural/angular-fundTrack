@@ -1,0 +1,47 @@
+<div class="list">
+    <div class="topnav">
+        <a class="split">
+            <button class="addnewBtn" routerLink="/addCredit">Add new</button>
+        </a>
+    </div>
+    <table>
+        <caption><b>Credit Card</b> expenses</caption>
+        <thead>
+            <tr>
+                <th class="dateHeaded">
+                    Date
+                </th>
+                <th class="purchaseHeaded">
+                    Use/Pay
+                </th>
+                <th class="totalHeaded">
+                    Amount
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let list of listToShow;let i=index">
+                <tr [ngClass]="list.mode?'paymode':''" (click)="gotoEdit(list.date)">
+                    <td>{{ list.date | date: 'dd/MM' }}</td>
+                    <td>{{ list.reason || (list.mode | titlecase) }}</td>
+                    <td style="color: palevioletred;">{{ list.amount | currency: 'INR' : 'symbol' : '1.0-0' }}</td>
+                    <td *ngIf="!list.mode" style="text-align: center;"><i class="fa fa-trash" aria-hidden="true" (click)="deleteRecord($event, list)"></i></td>
+                </tr>
+            </ng-container>
+        </tbody>
+        <p *ngIf="!listToShow.length" class="noRecord">No records found....</p>
+    </table>
+</div>
+
+<div>
+    <div class="creditDetails" *ngIf="usedTotal">
+        <i><b>Note:</b></i>&nbsp;<i>So far now Credit card <b>used</b> amount is: {{ usedTotal | currency: 'INR' : 'symbol' :
+            '1.0-0' }}</i>
+            <i> and credit card <b>paid</b> amount is: {{ paysTotal | currency: 'INR' : 'symbol' :
+                '1.0-0' }}</i>
+    </div>
+</div>
+
+<app-confirmation-dialog (fireYes)="handleDelete($event)" (fireNo)="handleDelete($event)"></app-confirmation-dialog>

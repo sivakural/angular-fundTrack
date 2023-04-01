@@ -1,0 +1,158 @@
+.addnewBtn {
+    border: 1px solid cornflowerblue;
+    border-radius: 20px;
+    padding: 0.5em;
+    background-color: cadetblue;
+    color: #fff;
+    cursor: pointer;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #f2f2f2;
+}
+
+.topnav a {
+    float: left;
+    display: block;
+    color: #333;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.topnav a.active {
+    background-color: #7d8380;
+    color: white;
+}
+
+.topnav .icon {
+    display: none;
+}
+
+
+/* Create a right-aligned (split) link inside the navigation bar */
+.topnav a.split {
+    float: right;
+    color: white;
+    padding: 0;
+    padding-top: 9px;
+    padding-right: 12px;
+}
+
+table {
+    margin-top: 5px;
+    border-collapse: collapse;
+    width: 100%;
+    text-align: left;
+    display: table;
+    overflow-x: auto;
+}
+
+tr {
+    border-bottom: 1px solid #ddd;
+    line-height: 18px;
+}
+
+tr:hover {
+    background-color: #D6EEEE;
+}
+
+caption {
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+.content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+
+.noRecord {
+    color: #783434
+}
+
+.left-side {
+    width: 48%; 
+    float: left;
+    background-color: darkgrey;
+    color: white;
+}
+
+.right-side {
+    background-color: darkgrey;
+    color: white;
+    width: 48%; 
+    float: right; 
+    padding-left: 5px; 
+    border-left: 1px solid;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+    table,
+    .noRecord {
+        font-size: 12px;
+    }
+
+    .dateHeaded {
+        width: 10%;
+    }
+
+    .purchaseHeaded {
+        width: 80%;
+    }
+
+    .totalHeaded {
+        width: 10%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .topnav a:not(:first-child) {
+        display: none;
+    }
+
+    .topnav a {
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+
+    .topnav a.icon {
+        float: right;
+        display: block;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .topnav.responsive {
+        position: relative;
+    }
+
+    .topnav.responsive .icon {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .topnav.responsive a {
+        float: none;
+        display: block;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    .addnewBtn {
+        margin-bottom: 10px;
+        margin-left: 2px;
+    }
+}
