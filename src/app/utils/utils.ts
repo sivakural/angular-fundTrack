@@ -4,12 +4,12 @@ const medical: any[] = ["Medicene", "Hospital"];
 const maintanence: any[] = ["Car", "Bike", "TV", "Washing Machine", "Refreidgerator", "Laptop", "Stablilizer", "Induction", "Mobile"];
 const fuel: any[] = ["Car", "Bike"];
 const travel: any[] = ["Bus", "Train", "Flight", "Auto", "Bike", "Cab"];
-const bill: any[] = ["Credit Card", "EB", "GAS", "Broad Band", "Pay borrow money", "Mobile Rechagrge", "Rent Pay"];
+const bill: any[] = ["Credit Card", "EB", "GAS", "Broad Band", "Pay borrow money", "Mobile Recharge", "Rent Pay"];
 const maligai: any[] = ["Rice", "Flour(idli/dosa)", "Washing Items", "Kitchen Items", "Paste", "Soap", "Extras", "Oil"];
 const nonveg: any[] = ["Chicken", "Mutton", "Fish", "Egg", "Karuvadu"];
 const buy: any[] = ["Mobile", "Tv", "Washing Machine", "Heater", "RO Machine", "Fridge", "Laptop", "Cheppals/Shoes", "Speaker", "HeadPhone", "Bike", "Flat", "Other Items"];
 const calList: any[] = ["Day", "Week", "Month", "Year"];
-const monthList: any[] = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+const monthList: any[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const insurance: any[] = ["Health", "Car", "Bike", "Mobile", "Laptop", "AC"]
 
 const formKeys: any = {
@@ -17,7 +17,34 @@ const formKeys: any = {
     "creditCardForm": ['date', 'amount', 'reason']
 }
 
-export { categoreyList, amount, medical, maintanence, fuel, travel, bill, maligai, nonveg, calList, buy, monthList, insurance, formKeys };
+const user: any  = {
+    register: '/register',
+    login: '/login'
+}
+
+const expense: any = {
+    add: '/entry',
+    list: '/tracklist',
+    get: '/getentry',
+    update: '/update'
+}
+
+const creditcarduse: any = {
+    add: '/creditcarduse',
+    get: '/getcreditcarduse',
+    list: '/getCreditCardUsedlist',
+    delete: '/deletecreditcarduse',
+    update: '/creditcarduseupdate'
+}
+
+const creditcardpay: any = {
+    add: '/creditcardpay',
+    get: '/getcreditcardpay',
+    list: '/getCreditCardPayslist',
+    delete: '/deletecreditcardpay'
+}
+
+export { categoreyList, amount, medical, maintanence, fuel, travel, bill, maligai, nonveg, calList, buy, monthList, insurance, formKeys, expense, creditcarduse, creditcardpay, user };
 
 export interface ICalender {
     type: string,
@@ -33,4 +60,4 @@ export function formatDate(date: Date) {
     if (month.length < 2) month = '0' + month;
     if (day.length < 2) day = '0' + day;
     return [year, month, day].join('-');
-  }
+}

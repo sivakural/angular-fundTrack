@@ -22,7 +22,7 @@ export class RegisterComponent {
 
   register() {
     let inputs = this.formService.removeFormControlspace({...this.registerForm.value});
-    this.util.addUser(inputs).subscribe(res => {
+    this.util.commonPost(inputs, 'user', 'register').subscribe(res => {
       this.router.navigate(['/'])
     }, (err) => {
       console.log(err);

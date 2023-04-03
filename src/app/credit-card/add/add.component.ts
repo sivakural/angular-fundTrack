@@ -24,7 +24,7 @@ export class AddComponent {
   constructor(private location: Location, private util: UtilsService, private formService: FormService, private route: ActivatedRoute) {
     this.route.queryParams.subscribe((params: any) => {
       if (params.selectedDate) {
-        this.util.getCreditCardUse(params.selectedDate).subscribe((res) => {
+        this.util.commonGet('creditcarduse', 'get',{ date:  params.selectedDate }).subscribe((res) => {
           if (res) {
             this.creditCardForm = this.formService.deriveForm(res, 'creditCardForm');
             this.isEditMode = true;
@@ -36,11 +36,11 @@ export class AddComponent {
 
   onSubmit() {
     if (this.isEditMode) {
-      this.util.updateCreditCardUse(this.creditCardForm.value).subscribe(() => {
+      this.util.commonPut(this.creditCardForm.value, 'creditcarduse', 'update').subscribe(() => {
         this.goto();
       })
     } else {
-      this.util.addCreditUse(this.creditCardForm.value).subscribe(() => {
+      this.util.commonPost(this.creditCardForm.value, 'creditcarduse', 'add').subscribe(() => {
         this.goto();
       });
     }

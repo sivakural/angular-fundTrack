@@ -27,11 +27,11 @@ export class SpendListComponent {
 
   private getList() {
     let obj: ICalender = {
-      type: this.currentCal,
+      type: this.currentCal.toLowerCase(),
       month: ["Day", "Week"].includes(this.currentCal) ? monthList.indexOf(this.currentMonth) + 1 : 0,
       year: 0
     }
-    this.utils.getList(obj).subscribe(res => {
+    this.utils.commonGet('expense', 'list', obj).subscribe(res => {
       res.forEach((val: any) => {
         val.things.forEach((item: any) => {
           if (item.subcategories) {

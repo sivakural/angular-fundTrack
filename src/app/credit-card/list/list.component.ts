@@ -39,7 +39,7 @@ export class ListComponent {
   }
 
   getUsedList() {
-    this.utils.getCreditCardUsedList().subscribe((res: []) => {
+    this.utils.commonGet('creditcarduse', 'list').subscribe((res: []) => {
       this.listToShow = this.listToShow.concat(res);
       this.sortList();
       if (res.length) this.usedTotal = res.reduce((p, c: any) => { return p + c.amount }, 0);
@@ -47,7 +47,7 @@ export class ListComponent {
   }
 
   getPaysList() {
-    this.utils.getCreditCardPaysList().subscribe((res: []) => {
+    this.utils.commonGet('creditcardpay', 'list').subscribe((res: []) => {
       this.listToShow = this.listToShow.concat(res);
       this.sortList();
       if (res.length) this.paysTotal = res.reduce((p, c: any) => { return p + c.amount }, 0);
@@ -81,7 +81,7 @@ export class ListComponent {
 
   handleDelete(val: any) {
     if (val) {
-      this.utils.deleteCreditCardUse(this.deleteData).subscribe(() => {
+      this.utils.commonDelete('creditcarduse', 'delete', this.deleteData).subscribe(() => {
         console.log("successfully deleted...");
         this.listToShow = [];
         this.initialCalls();

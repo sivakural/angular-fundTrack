@@ -1,40 +1,21 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { ICalender } from './utils';
+import { user, expense, creditcardpay, creditcarduse } from './utils';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UtilsService {
-  // host = "https://fundtrack.onrender.com";
-  // host = 'http://192.168.1.5:8080'
-  sendURL = "/entry";
-  listURL = "/tracklist";
-  getURL = "/getentry";
-  updateURL = "/update";
-  registerURL = "/register";
-  loginURL = '/login';
-
-  // Credit card
-  CreditcardAddURL = '/creditcarduse';
-  creditcardPayURL = '/creditcardpay';
-  getCreditcarduseURL = '/getcreditcarduse';
-  getCreditcardpayURL = '/getcreditcardpay';
-  creditcardUsedListURL = '/getCreditCardUsedlist';
-  creditcardPaysListURL = '/getCreditCardPayslist';
-  deletecreditcardPayURL = '/deletecreditcardpay';
-  deletecreditcardUseURL = '/deletecreditcarduse';
-  updatecreditcarduseURL = '/creditcarduseupdate';
 
   constructor(private http: HttpClient) { }
 
   private getAPI(url: string, params?: any): Observable<any> {
     if (params) {
-      return this.http.get(url, params).pipe(catchError(this.handleError));
+      return this.http.get(url, { params: params }).pipe(catchError(this.handleError));
     } else {
       return this.http.get(url).pipe(catchError(this.handleError));
-    }  
+    }
   }
 
   private postAPI(url: string, record: any): Observable<any> {
@@ -46,82 +27,45 @@ export class UtilsService {
   }
 
   private deleteAPI(url: string, params: any): Observable<any> {
-    return this.http.delete(url, params).pipe(catchError(this.handleError));
+    return this.http.delete(url, { params: params }).pipe(catchError(this.handleError));
   }
 
-  public addUser(record: any) {
-    return this.postAPI(this.registerURL, record);
-  }
-
-  public login(record: any) {
-    return this.postAPI(this.loginURL, record);
-  }
-
-  public getList(obj: ICalender) {
-    let httpOptions: any = {};
-    if (obj.month) {
-      httpOptions["params"] = new HttpParams().set('type', obj.type.toLowerCase()).set('month', obj.month).set('year', obj.year);
-    } else {
-      httpOptions["params"] = new HttpParams().set('type', obj.type.toLowerCase());
+  private getUrl(prefix: string, url: string) {
+    switch (prefix) {
+      case 'user':
+        url = user[url];
+        break;
+      case 'expense':
+        url = expense[url]
+        break;
+      case 'creditcardpay':
+        url = creditcardpay[url]
+        break;
+      default:
+        url = creditcarduse[url]
+        break;
     }
-    return this.getAPI(this.listURL, httpOptions);
+    return url;
   }
 
-  public addData(record: any) {
-    return this.postAPI(this.sendURL, record);
+  public commonPost(record: any, prefix: string, url: string) {
+    url = this.getUrl(prefix, url);
+    return this.postAPI(url, record);
   }
 
-  public getEntry(data: any) {
-    return this.postAPI(this.getURL, data);
+  public commonGet(prefix: string, url: string, param?: any) {
+    url = this.getUrl(prefix, url);
+    return this.getAPI(url, param);
   }
 
-  public update(data: any) {
-    return this.putAPI(this.updateURL, data);
+  public commonPut(record: any, prefix: string, url: string) {
+    url = this.getUrl(prefix, url);
+    return this.putAPI(url, record);
   }
 
-  // Credit card sextion
-  public addCreditUse(record: any) {
-    return this.postAPI(this.CreditcardAddURL, record);
-  }
-
-  public getCreditCardUse(date: any) {
-    let httpOptions: any = {};
-    httpOptions['params'] = new HttpParams().set('date', date);
-    return this.getAPI(this.getCreditcarduseURL, httpOptions);
-  }
-
-  public getCreditCardPay(date: any) {
-    let httpOptions: any = {};
-    httpOptions['params'] = new HttpParams().set('date', date);
-    return this.getAPI(this.getCreditcardpayURL, httpOptions);
-  }
-
-  public deleteCreditCardPay(date: any) {
-    let httpOptions: any = {};
-    httpOptions['params'] = new HttpParams().set('date', date);
-    return this.deleteAPI(this.deletecreditcardPayURL, httpOptions);
-  }
-
-  public deleteCreditCardUse(data: any) {
-    let httpOptions: any = {};
-    httpOptions['params'] = new HttpParams().set('date', data.date).set("amount", data.amount);
-    return this.deleteAPI(this.deletecreditcardUseURL, httpOptions);
-  } 
-
-  public updateCreditCardUse(data: any) {
-    return this.putAPI(this.updatecreditcarduseURL, data);
-  } 
-
-  public addCreditPay(record: any) {
-    return this.postAPI(this.creditcardPayURL, record);
-  }
-
-  public getCreditCardUsedList() {
-    return this.getAPI(this.creditcardUsedListURL);
-  }
-
-  public getCreditCardPaysList() {
-    return this.getAPI(this.creditcardPaysListURL);
+  public commonDelete(prefix: string, url: string, param: any) {
+    url = this.getUrl(prefix, url);
+    return this.deleteAPI(url, param);
   }
 
   // Error handling..

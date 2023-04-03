@@ -54,10 +54,10 @@ export class AddThingsComponent {
   ngOnInit() {
     this.route.queryParams.subscribe((params: any) => {
       if (params.selectedDate) {
-        this.utils.getEntry({ date: params.selectedDate }).subscribe(res => {
+        this.utils.commonGet('expense', 'get', { date: params.selectedDate }).subscribe(res => {
           this.thingsForm = this.formService.deriveForm(res, 'thingsForm');
           this.isEditMode = true;
-          this.utils.getCreditCardPay(params.selectedDate).subscribe(data => {
+          this.utils.commonGet('creditcardpay','get', { date: params.selectedDate }).subscribe(data => {
             if (data) {
               this.creditCardPayAmount = data.amount;
             }
@@ -184,10 +184,10 @@ export class AddThingsComponent {
     let inputs = this.formService.removeEmpty(this.thingsForm.value, this.creditCardEntry.bind(this));
     if (this.isEditMode) {
       delete inputs._id;
-      this.utils.update(inputs).subscribe(() => {
+      this.utils.commonPut(inputs, 'expense', 'update').subscribe(() => {
         if (this.creditCardPayAmount && !this.isCreditAmountExists) {
           // delete credit card pay entry.
-          this.utils.deleteCreditCardPay(inputs.date).subscribe(() => {
+          this.utils.commonDelete('creditcardpay', 'delete', inputs.date).subscribe(() => {
             console.log("Successfully deleted credit card entry...");
             this.goto();
           });
@@ -196,7 +196,7 @@ export class AddThingsComponent {
         }
       });
     } else {
-      this.utils.addData(inputs).subscribe(() => {
+      this.utils.commonPost(inputs, 'expense', 'add').subscribe(() => {
         this.goto();
       });
     }
@@ -211,7 +211,7 @@ export class AddThingsComponent {
         amount: data.subcategorey_value,
         mode: "pay"
       }
-      this.utils.addCreditPay(obj).subscribe(() => {
+      this.utils.commonPost(obj, 'creditcardpay', 'add').subscribe(() => {
         console.log("Successfully added credit card pay..");
       })
     }

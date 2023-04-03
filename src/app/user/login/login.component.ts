@@ -20,7 +20,7 @@ export class LoginComponent {
 
   login() {
     let inputs = this.formService.removeFormControlspace({...this.loginForm.value});
-    this.utils.login(inputs).subscribe(res => {
+    this.utils.commonPost(inputs, 'user', 'login').subscribe(res => {
       this.router.navigate(['/spendlist']);
     }, (err) => {
       this.showAlert = true;
