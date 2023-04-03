@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { monthList, ICalender } from '../utils';
+import { Subject } from 'rxjs';
+import { monthList } from '../utils/utils';
 
 @Injectable({
   providedIn: 'root'

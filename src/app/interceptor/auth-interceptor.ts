@@ -1,7 +1,8 @@
-import { HttpEvent, HttpHandler, HttpHeaderResponse, HttpHeaders, HttpInterceptor, HttpRequest, HttpResponse, HttpResponseBase } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponseBase } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { AuthService } from 'src/app/auth.service';
+import { AuthService } from '../utils/auth.service';
+import { environment } from '../../environments/environment';
 
 
 @Injectable()
@@ -10,6 +11,11 @@ export class AuthInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // Get the auth token from the service.
         const authToken: any = this.auth.getAuthorizationToken();
+
+        // clone req url based on environments
+        req = req.clone({
+            url: req.url.replace(/^/, environment.serverHost)
+        });
 
         // Clone the request and replace the original headers with
         // cloned headers, updated with the authorization.

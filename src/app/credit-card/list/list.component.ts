@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationDialogComponent } from 'src/app/common/confirmation-dialog/confirmation-dialog.component';
-import { HostDirective } from 'src/app/common/host.directive';
 import { PaginationService } from 'src/app/common/pagination.service';
-import { UtilsService } from 'src/app/utils.service';
+import { HostDirective } from 'src/app/directives/host.directive';
+import { UtilsService } from 'src/app/utils/utils.service';
 
 @Component({
   selector: 'app-list',

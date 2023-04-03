@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { UtilsService } from '../utils.service';
+import { Location } from '@angular/common';
 import {
   categoreyList, 
   amount, 
@@ -15,9 +15,9 @@ import {
   buy, 
   insurance,
   formatDate
-} from '../utils';
-import { FormService } from '../form.service';
-import { Location } from '@angular/common';
+} from '../utils/utils';
+import { FormService } from '../utils/form.service';
+import { UtilsService } from '../utils/utils.service';
 
 @Component({
   selector: 'app-add-things',

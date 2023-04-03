@@ -2,9 +2,9 @@ import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { FormService } from 'src/app/form.service';
-import { UtilsService } from 'src/app/utils.service';
-import { formatDate } from '../../utils';
+import { FormService } from 'src/app/utils/form.service';
+import { formatDate } from 'src/app/utils/utils';
+import { UtilsService } from 'src/app/utils/utils.service';
 
 @Component({
   selector: 'app-add',
