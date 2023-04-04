@@ -181,7 +181,7 @@ export class AddThingsComponent {
   }
 
   onSubmit() {
-    let inputs = this.formService.removeEmpty(this.thingsForm.value, this.creditCardEntry.bind(this));
+    let inputs = this.formService.removeEmpty(this.thingsForm.getRawValue(), this.creditCardEntry.bind(this));
     if (this.isEditMode) {
       delete inputs._id;
       this.utils.commonPut(inputs, 'expense', 'update').subscribe(() => {

@@ -36,7 +36,7 @@ export class AddComponent {
 
   onSubmit() {
     if (this.isEditMode) {
-      this.util.commonPut(this.creditCardForm.value, 'creditcarduse', 'update').subscribe(() => {
+      this.util.commonPut(this.creditCardForm.getRawValue(), 'creditcarduse', 'update').subscribe(() => {
         this.goto();
       })
     } else {
