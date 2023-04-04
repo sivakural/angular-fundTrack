@@ -6,12 +6,8 @@
                 <label for="date">Date</label>
             </div>
             <div class="col-75">
-                <ng-container *ngIf="isEditMode; else dateEntry">
-                    <span class="date">{{ creditCardForm.value?.date | date: 'dd/MM/yy'  }}</span>
-                </ng-container>
-                <ng-template #dateEntry>
-                    <input type="date" id="date" name="date" formControlName="date" min="2023-01-01" [max]="maxDate" required>
-                </ng-template>
+                <input type="date" id="date" name="date" formControlName="date" min="2023-01-01" [max]="maxDate"
+                    required>
             </div>
         </div>
         <div class="row">

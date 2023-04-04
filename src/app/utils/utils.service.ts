@@ -2,32 +2,33 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { user, expense, creditcardpay, creditcarduse } from './utils';
+import { AlertService } from '../common/alert/alert.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UtilsService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private alert: AlertService) { }
 
   private getAPI(url: string, params?: any): Observable<any> {
     if (params) {
-      return this.http.get(url, { params: params }).pipe(catchError(this.handleError));
+      return this.http.get(url, { params: params }).pipe(catchError(this.handleError.bind(this)));
     } else {
-      return this.http.get(url).pipe(catchError(this.handleError));
+      return this.http.get(url).pipe(catchError(this.handleError.bind(this)));
     }
   }
 
   private postAPI(url: string, record: any): Observable<any> {
-    return this.http.post(url, record).pipe(catchError(this.handleError));
+    return this.http.post(url, record).pipe(catchError(this.handleError.bind(this)));
   }
 
   private putAPI(url: string, record: any): Observable<any> {
-    return this.http.put(url, record).pipe(catchError(this.handleError));
+    return this.http.put(url, record).pipe(catchError(this.handleError.bind(this)));
   }
 
   private deleteAPI(url: string, params: any): Observable<any> {
-    return this.http.delete(url, { params: params }).pipe(catchError(this.handleError));
+    return this.http.delete(url, { params: params }).pipe(catchError(this.handleError.bind(this)));
   }
 
   private getUrl(prefix: string, url: string) {
@@ -81,8 +82,12 @@ export class UtilsService {
     }
     // Return an observable with a user-facing error message.
     if (error.status == 400 || error.status == 401) {
+      this.alert.triggerAlert(error.error);
       return throwError(() => error);
     }
-    return throwError(() => new Error('Something bad happened; please try again later.'));
+    
+    let stringMsg = 'Something bad happened; please try again later.';
+    this.alert.triggerAlert(stringMsg);
+    return throwError(() => new Error(stringMsg));
   }
 }

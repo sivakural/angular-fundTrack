@@ -42,21 +42,30 @@ caption {
     color: green !important;
 }
 
+.topnav {
+    background-color: #f2f2f2;
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    overflow: hidden;
+}
+
 .topnav a.split {
     float: right;
     color: white;
     padding: 0;
-    padding-top: 9px;
+    padding-top: 6px;
     padding-right: 12px;
+    padding-bottom: 5px
 }
 
 .addnewBtn {
     border: 1px solid cornflowerblue;
     border-radius: 20px;
     padding: 0.5em;
-    background-color: cadetblue;
+    background-color: cornflowerblue;
     color: #fff;
     cursor: pointer;
+    font-size: 12px;
 }
 
 .last-column{

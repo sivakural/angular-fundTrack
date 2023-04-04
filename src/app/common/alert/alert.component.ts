@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { AlertService } from './alert.service';
 
 @Component({
   selector: 'app-alert',
@@ -6,12 +7,19 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./alert.component.css']
 })
 export class AlertComponent {
-  _statement: String = '';
-  @Input()
-  get statement() {
-    return this._statement;
-  }
-  set statement(value) {
-    this._statement = value;
+  statement: String = '';
+
+  constructor(private alertService: AlertService) { }
+
+  ngOnInit() {
+    // handle alert observable
+    const alerts = this.alertService.showAlert.subscribe({
+      next: (msg) => {
+        this.statement = msg;
+        setTimeout(() => {
+          this.statement = '';
+        }, 1500);
+      }
+    });
   }
 }

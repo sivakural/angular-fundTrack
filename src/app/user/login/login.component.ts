@@ -10,25 +10,17 @@ import { UtilsService } from 'src/app/utils/utils.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  showAlert: boolean = false
-  alertStment: String = '';
   loginForm: FormGroup = this.fb.group({
     username: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]),
     password: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(1024)])
-  })
+  });
+
   constructor(private fb: FormBuilder, private utils: UtilsService, private router: Router, private formService: FormService) { }
 
-  login() {
+  public login() {
     let inputs = this.formService.removeFormControlspace({...this.loginForm.value});
-    this.utils.commonPost(inputs, 'user', 'login').subscribe(res => {
+    this.utils.commonPost(inputs, 'user', 'login').subscribe(() => {
       this.router.navigate(['/spendlist']);
-    }, (err) => {
-      this.showAlert = true;
-      this.alertStment = err.error;
-      setTimeout(() => {
-        this.showAlert = !this.showAlert;
-        this.alertStment = '';
-      }, 1500);
     })
   }
 

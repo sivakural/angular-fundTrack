@@ -10,8 +10,7 @@ import { UtilsService } from 'src/app/utils/utils.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  showAlert: boolean = false
-  alertStment: String = '';
+
   registerForm: FormGroup = this.fb.group({
     username: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]),
     email: new FormControl('', [Validators.required, Validators.maxLength(255), Validators.email]),
@@ -22,16 +21,8 @@ export class RegisterComponent {
 
   register() {
     let inputs = this.formService.removeFormControlspace({...this.registerForm.value});
-    this.util.commonPost(inputs, 'user', 'register').subscribe(res => {
+    this.util.commonPost(inputs, 'user', 'register').subscribe(() => {
       this.router.navigate(['/'])
-    }, (err) => {
-      console.log(err);
-      this.showAlert = true;
-      this.alertStment = err.error;
-      setTimeout(() => {
-        this.showAlert = !this.showAlert;
-        this.alertStment = '';
-      }, 1500);
-    })
+    });
   }
 }

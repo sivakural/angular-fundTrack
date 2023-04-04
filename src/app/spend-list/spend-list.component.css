@@ -2,9 +2,10 @@
     border: 1px solid cornflowerblue;
     border-radius: 20px;
     padding: 0.5em;
-    background-color: cadetblue;
+    background-color: cornflowerblue;
     color: #fff;
     cursor: pointer;
+    font-size: 12px;
 }
 
 .topnav {

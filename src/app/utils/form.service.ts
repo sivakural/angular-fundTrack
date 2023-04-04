@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { formKeys } from './utils';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { formKeys, formatDate } from './utils';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +42,7 @@ export class FormService {
             group.addControl(key, this.fb.control(val[key], [Validators.required]))
           }
         }
-        arrayForm.push(group); 
+        arrayForm.push(group);
       })
       return arrayForm;
     } else {
@@ -55,12 +55,26 @@ export class FormService {
             baseForm.addControl(val, this.deriveForm(data[val]));
           } else {
             baseForm.addControl(val, this.fb.control(data[val], [Validators.required]));
-            val == 'date' ? baseForm.get(val)?.disabled : '';
+            this.disabledWhenEdit(val, baseForm.get(val) as FormControl);
           }
         }
       });
       return baseForm;
     }
   }
-  
+
+  disabledWhenEdit(key: string, control: FormControl) {
+    switch (key) {
+      case 'date':
+        let val = formatDate(control.value);
+        control.patchValue(val);
+        control.disable({ onlySelf: true })
+        break;
+      case 'reason':
+        control.disable({ onlySelf: true })
+        break;
+    }
+    return control;
+  }
+
 }

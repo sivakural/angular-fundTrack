@@ -6,12 +6,7 @@
                 <label for="date">Date</label>
             </div>
             <div class="col-75">
-                <ng-container *ngIf="isEditMode; else dateEntry">
-                    <span class="date">{{ thingsForm.value?.date | date: 'dd/MM/yy' }}</span>
-                </ng-container>
-                <ng-template #dateEntry>
-                    <input type="date" id="date" name="date" formControlName="date" min="2023-01-01" [max]="today">
-                </ng-template>
+                <input type="date" id="date" name="date" formControlName="date" min="2023-01-01" [max]="today">
             </div>
         </div>
         <div formArrayName="things">
@@ -36,7 +31,8 @@
                                 <div class="row">
                                     <div class="col-25">
                                         <label for="subcategorey">{{thing.get('categorey')?.value}}</label>
-                                        <span *ngIf="getsubcategories(i).controls.length > 1" class="closebtn" (click)="removeControl(i, j)">&times;</span>
+                                        <span *ngIf="getsubcategories(i).controls.length > 1" class="closebtn"
+                                            (click)="removeControl(i, j)">&times;</span>
                                     </div>
                                     <div class="col-75">
                                         <select name="subcategorey" id="subcategorey" formControlName="subcategorey"
@@ -51,10 +47,12 @@
                                         <label for="amout">Amount</label>
                                     </div>
                                     <div class="col-75">
-                                        <input type="number" id="amout" name="amout" placeholder="Enter amount in numbers.."
+                                        <input type="number" id="amout" name="amout"
+                                            placeholder="Enter amount in numbers.."
                                             formControlName="subcategorey_value">
                                         <label *ngIf="(getsubcategories(i).controls.length - 1) == j">
-                                            <input type="checkbox" name="addsub" (change)="addsubcategories(i)"> {{'Add ' +
+                                            <input type="checkbox" name="addsub" (change)="addsubcategories(i)"> {{'Add
+                                            ' +
                                             thing.get('categorey')?.value}}
                                         </label>
                                     </div>

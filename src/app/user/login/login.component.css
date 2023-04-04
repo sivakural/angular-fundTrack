@@ -61,6 +61,13 @@ img.avatar {
     padding-right: 10px;
   } */
 
+  button:disabled {
+    background-color: rgba(239, 239, 239, 0.3);
+    color: rgba(84, 84, 84, 0.3);
+    cursor: default;
+    border-color: rgba(118, 118, 118, 0.3);
+  }
+
 /* Change styles for span and cancel button on extra small screens */
 @media screen and (max-width: 300px) {
   span.psw {

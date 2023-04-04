@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+.parent-container {
+  position: relative;
+}
+
 /* Style the input container */
 .input-container {
   display: flex;
@@ -39,6 +43,13 @@
   opacity: 0.9;
 }
 
+button:disabled {
+  background-color: rgba(239, 239, 239, 0.3);
+  color: rgba(84, 84, 84, 0.3);
+  cursor: default;
+  border-color: rgba(118, 118, 118, 0.3);
+}
+
 .cancel {
   background-color: red;
   padding: 15px 20px;
@@ -51,4 +62,9 @@
 
 .btn:hover {
   opacity: 1;
+}
+
+.redMsg {
+  position: absolute;
+  bottom: -33%;
 }
