@@ -36,7 +36,12 @@ export class SpendListComponent {
         val.things.forEach((item: any) => {
           if (item.subcategories) {
             const result = Object.values(item.subcategories.reduce((r: any, o: any) => (r[o.subcategorey]
-              ? (r[o.subcategorey].subcategorey_value += o.subcategorey_value)
+              ? (r[o.subcategorey].subcategorey_value ? r[o.subcategorey].subcategorey_value += o.subcategorey_value : (o.to.forEach((val: any) => {
+                let index = r[o.subcategorey].to.findIndex((oVal: any) => oVal.person == val.person);
+                if (index>=0) {
+                  r[o.subcategorey].to[index].amount += val.amount;
+                } else r[o.subcategorey].to.push(val);
+              })))
               : (r[o.subcategorey] = { ...o }), r), {}));
             item.subcategories = result;
           }
@@ -113,5 +118,11 @@ export class SpendListComponent {
     } else {
       x.className = "topnav";
     }
+  }
+
+  public getTotalAmount(obj: any): any {
+    if (!obj.to) return obj.subcategorey_value;
+    let total = obj.to.map((val: any) => val.amount).reduce((prev: any, nxt: any) => prev + nxt);
+    return total;
   }
 }

@@ -33,26 +33,41 @@
                 <tr (click)="gotoEdit(list['date'], contentRef)">
                     <td style="color: green;">{{ list["date"] | date: 'dd/MM' }}</td>
                     <td style="word-wrap: break-word;">{{ list['things'] | converterString }}</td>
-                    <td style="color: palevioletred; word-wrap: break-word;">{{ list['things'] | converterNumber | currency: 'INR' : 'symbol' : '1.0-0' }}</td>
+                    <td style="color: palevioletred; word-wrap: break-word;">{{ list['things'] | converterNumber |
+                        currency: 'INR' : 'symbol' : '1.0-0' }}</td>
                 </tr>
                 <tr class="content" #contentRef>
-                    <td colspan="3">
-                        <p>Following things purchased....</p>
-                        <div class="left-side">
-                            <p *ngFor="let item of shownonSubCategorey(list['things'])">
-                                {{ item['categorey'] + ":" + (item['categorey_value'] | currency: 'INR' : 'symbol' : '1.0-0') }}
-                            </p>
-                        </div>
-                        <div class="right-side">
-                            <div *ngFor="let item of showSubCategorey(list['things'])">
-                                {{ item['categorey'] + ":"}}
-                                <ul>
-                                    <li *ngFor="let subItem of item['subcategories']; let k=index">{{
-                                        subItem.subcategorey + ":" + (subItem.subcategorey_value | currency: 'INR' : 'symbol' : '1.0-0') }}</li>
-                                </ul>
+                    <ng-container *ngIf="currentCal!='Day'">
+                        <td colspan="3">
+                            <p>Following things purchased....</p>
+                            <div class="left-side">
+                                <p *ngFor="let item of shownonSubCategorey(list['things'])">
+                                    {{ item['categorey'] + ":" + (item['categorey_value'] | currency: 'INR' : 'symbol' :
+                                    '1.0-0') }}
+                                </p>
                             </div>
-                        </div>
-                    </td>
+                            <div class="right-side">
+                                <div *ngFor="let item of showSubCategorey(list['things'])">
+                                    {{ item['categorey'] + ":"}}
+                                    <ul>
+                                        <li *ngFor="let subItem of item['subcategories']; let k=index">
+                                            {{ subItem.subcategorey + ':' + (getTotalAmount(subItem) | currency: 'INR' :
+                                            'symbol' :
+                                            '1.0-0')}}
+                                            <ng-container *ngIf="subItem.to">
+                                                <ul>
+                                                    <li *ngFor="let sentTo of subItem.to">
+                                                        {{ sentTo.person + ':' + (sentTo.amount | currency: 'INR' :
+                                                        'symbol' : '1.0-0') }}
+                                                    </li>
+                                                </ul>
+                                            </ng-container>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
                 </tr>
             </ng-container>
         </tbody>

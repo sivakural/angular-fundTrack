@@ -3,18 +3,9 @@ import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Valida
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import {
-  categoreyList, 
-  amount, 
-  medical, 
-  maintanence, 
-  fuel, 
-  travel, 
-  bill, 
-  maligai, 
-  nonveg, 
-  buy, 
-  insurance,
-  formatDate
+  expenses,
+  formatDate,
+  keyIncludes
 } from '../utils/utils';
 import { FormService } from '../utils/form.service';
 import { UtilsService } from '../utils/utils.service';
@@ -25,17 +16,7 @@ import { UtilsService } from '../utils/utils.service';
   styleUrls: ['./add-things.component.css']
 })
 export class AddThingsComponent {
-  categoreyList: any[] = categoreyList;
-  amount: any[] = amount;
-  medical: any[] = medical;
-  maintanence: any[] = maintanence;
-  fuel: any[] = fuel;
-  travel: any[] = travel;
-  bill: any[] = bill;
-  maligai: any[] = maligai;
-  nonveg: any[] = nonveg;
-  buy: any[] = buy;
-  insurance: any[] = insurance;
+  categoreyList: any[] = expenses['categoreyList'];
 
   isEditMode: boolean = false;
   sendCreditCard: boolean = false;
@@ -57,7 +38,7 @@ export class AddThingsComponent {
         this.utils.commonGet('expense', 'get', { date: params.selectedDate }).subscribe(res => {
           this.thingsForm = this.formService.deriveForm(res, 'thingsForm');
           this.isEditMode = true;
-          this.utils.commonGet('creditcardpay','get', { date: params.selectedDate }).subscribe(data => {
+          this.utils.commonGet('creditcardpay', 'get', { date: params.selectedDate }).subscribe(data => {
             if (data) {
               this.creditCardPayAmount = data.amount;
             }
@@ -100,68 +81,63 @@ export class AddThingsComponent {
     }))
   }
 
+  gettos(i: number, j: number): FormArray {
+    if (this.getsubcategories(i).at(j).get("to")) {
+      return this.getsubcategories(i).at(j).get("to") as FormArray;
+    } else {
+      let group = this.getsubcategories(i).at(j) as FormGroup;
+      group.addControl('to', this.fb.array([]));
+      return this.getsubcategories(i).at(j).get("to") as FormArray;
+    }
+  }
+
+  addtocategories(i: number, j: number) {
+    this.gettos(i, j).push(this.fb.group({
+      person: ['', Validators.required],
+      amount: ['', Validators.required]
+    }));
+  }
+
   handleSelection(i: number) {
     let getValue: string = (this.thingsArr.at(i).get('categorey')?.value).toLowerCase();
-    if (["amount", "maintanance", "medical", "fuel", "travel", "bill payments", "maligai", "nonveg", "buy", "insurance"].includes(getValue)) {
+    if (keyIncludes.includes(getValue)) {
       this.addsubcategories(i);
-      this.updateFormField(this.thingsArr.at(i).get('categorey_value'));
+      this.updateFormField(this.getControl(this.thingsArr.at(i) as FormGroup, 'categorey_value'));
     } else {
-      this.updateFormField(this.thingsArr.at(i).get('categorey_value'), true);
+      while (this.getsubcategories(i).length !== 0) {
+        this.getsubcategories(i).removeAt(0)
+      }
+      this.updateFormField(this.getControl(this.thingsArr.at(i) as FormGroup, 'categorey_value'), true);
+    }
+  }
+
+  handletoSelection(i: number, j: number) {
+    let getValue: string = (this.getsubcategories(i).at(j).get('subcategorey')?.value).toLowerCase();
+    if (keyIncludes.includes(getValue)) {
+      this.addtocategories(i, j);
+      this.updateFormField(this.getControl(this.getsubcategories(i).at(j) as FormGroup, 'subcategorey_value'));
+    } else {
+      while (this.gettos(i, j).length !== 0) {
+        this.gettos(i, j).removeAt(0)
+      }
+      this.updateFormField(this.getControl(this.getsubcategories(i).at(j) as FormGroup, 'subcategorey_value'), true);
     }
   }
 
   getSubCategoriesList(i: number) {
     let getValue: string = (this.thingsArr.at(i).get('categorey')?.value).toLowerCase();
-    let list = [];
-    switch (getValue) {
-      case "amount": {
-        list = this.amount;
-        break;
-      }
-      case "maintanance": {
-        list = this.maintanence;
-        break;
-      }
-      case "medical": {
-        list = this.medical;
-        break;
-      }
-      case "fuel": {
-        list = this.fuel;
-        break;
-      }
-      case "travel": {
-        list = this.travel;
-        break;
-      }
-      case "maligai": {
-        list = this.maligai;
-        break;
-      }
-      case "nonveg": {
-        list = this.nonveg;
-        break;
-      }
-      case "buy": {
-        list = this.buy;
-        break;
-      }
-      case "insurance": {
-        list = this.insurance;
-        break;
-      }
-      default: {
-        list = this.bill;
-        break;
-      }
-    }
-    return list;
+    return expenses[getValue];
   }
 
-  removeControl(i: number, j?: number) {
-    if (j != undefined) {
+  removeControl(i: number, j?: any, k?: any) {
+    if (k != undefined) {
       if (j == 0) {
-        this.updateFormField(this.thingsArr.at(i).get('categorey'))
+        this.updateFormField(this.getControl(this.getsubcategories(i).at(j) as FormGroup, 'subcategorey'));
+      }
+      this.gettos(i, j).removeAt(k)
+    } else if (j != undefined) {
+      if (j == 0) {
+        this.updateFormField(this.getControl(this.thingsArr.at(i) as FormGroup, 'categorey'));
       }
       this.getsubcategories(i).removeAt(j);
     } else {
@@ -169,15 +145,23 @@ export class AddThingsComponent {
     }
   }
 
-  updateFormField(control: AbstractControl | null, validateMust?: boolean) {
-    let ctrl = control as FormControl;
-    ctrl?.patchValue('');
-    validateMust ? ctrl?.addValidators([Validators.required]) : ctrl?.clearValidators();
-    ctrl?.updateValueAndValidity();
+  getControl(group: FormGroup, control: string): FormControl {
+    let ctrl = group.get(control)?.get(control) as FormControl;
+    if (ctrl) return ctrl;
+    group?.addControl(control, new FormControl(''));
+    group?.updateValueAndValidity();
+    return group.get(control) as FormControl;
   }
 
-  checkSomeKey(fKey: String) {
+  updateFormField(control: FormControl, validateMust?: boolean) {
+    control?.patchValue('');
+    validateMust ? control?.addValidators([Validators.required]) : control?.clearValidators();
+    control?.updateValueAndValidity();
+  }
+
+  checkSomeKey(fKey: string, i: number, j: number): any {
     if (fKey == "Credit Card") this.sendCreditCard = true;
+    if (['Sent', "Give"].includes(fKey)) this.handletoSelection(i, j);
   }
 
   onSubmit() {

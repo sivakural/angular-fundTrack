@@ -36,6 +36,7 @@ label {
 
 /* Style inputs, select elements and textareas */
 input[type=number],
+input[type=text],
 select,
 textarea {
   width: 100%;
