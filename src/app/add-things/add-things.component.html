@@ -49,13 +49,13 @@
                                             <div class="row">
                                                 <div class="col-25">
                                                     <label for="subcategorey">{{sub.get('subcategorey')?.value}}</label>
-                                                    <span *ngIf="gettos(i,j).controls.length > 1"
-                                                        class="closebtn" (click)="removeControl(i,j,k)">&times;</span>
+                                                    <span *ngIf="gettos(i,j).controls.length > 1" class="closebtn"
+                                                        (click)="removeControl(i,j,k)">&times;</span>
                                                 </div>
                                                 <div class="col-75">
                                                     <input type="text" id="to" name="to"
-                                                        placeholder="Enter who to you send.."
-                                                        formControlName="person">
+                                                        placeholder="Enter who to you send.." formControlName="person"
+                                                        autocomplete="off">
                                                 </div>
                                             </div>
                                             <div>
@@ -69,7 +69,7 @@
                                                     <input type="number" id="amout" name="amout"
                                                         placeholder="Enter amount in numbers.."
                                                         formControlName="amount">
-                                                    <label>
+                                                    <label *ngIf="(gettos(i,j).controls.length - 1) == k">
                                                         <input type="checkbox" name="addto"
                                                             (change)="addtocategories(i,j)"> {{'Add
                                                         ' +
@@ -87,17 +87,14 @@
                                             <div class="row">
                                                 <div class="col-25">
                                                     <label for="subcategorey">{{sub.get('subcategorey')?.value}}</label>
-                                                    <span *ngIf="gettos(i,j).controls.length > 1"
-                                                        class="closebtn" (click)="removeControl(i,j,k)">&times;</span>
+                                                    <span *ngIf="gettos(i,j).controls.length > 1" class="closebtn"
+                                                        (click)="removeControl(i,j,k)">&times;</span>
                                                 </div>
                                                 <div class="col-75">
                                                     <input type="text" id="to" name="to"
-                                                        placeholder="Enter who to you give.."
-                                                        formControlName="person">
+                                                        placeholder="Enter who to you give.." formControlName="person"
+                                                        autocomplete="off">
                                                 </div>
-                                            </div>
-                                            <div>
-
                                             </div>
                                             <div class="row">
                                                 <div class="col-25">
@@ -107,7 +104,42 @@
                                                     <input type="number" id="amout" name="amout"
                                                         placeholder="Enter amount in numbers.."
                                                         formControlName="amount">
-                                                    <label>
+                                                    <label *ngIf="(gettos(i,j).controls.length - 1) == k">
+                                                        <input type="checkbox" name="addto"
+                                                            (change)="addtocategories(i,j)"> {{'Add
+                                                        ' +
+                                                        sub.get('subcategorey')?.value}}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="sub.get('subcategorey')?.value=='Get'" formArrayName="to">
+                                    <div class="subcategories"
+                                        *ngFor="let nestedsub of gettos(i,j).controls; let k=index">
+                                        <div [formGroupName]="k">
+                                            <div class="row">
+                                                <div class="col-25">
+                                                    <label for="subcategorey">{{sub.get('subcategorey')?.value}}</label>
+                                                    <span *ngIf="gettos(i,j).controls.length > 1" class="closebtn"
+                                                        (click)="removeControl(i,j,k)">&times;</span>
+                                                </div>
+                                                <div class="col-75">
+                                                    <input type="text" id="to" name="to"
+                                                        placeholder="Enter who you get from.." formControlName="person"
+                                                        autocomplete="off">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-25">
+                                                    <label for="amout">Amount</label>
+                                                </div>
+                                                <div class="col-75">
+                                                    <input type="number" id="amout" name="amout"
+                                                        placeholder="Enter amount in numbers.."
+                                                        formControlName="amount">
+                                                    <label *ngIf="(gettos(i,j).controls.length - 1) == k">
                                                         <input type="checkbox" name="addto"
                                                             (change)="addtocategories(i,j)"> {{'Add
                                                         ' +
@@ -138,7 +170,7 @@
                     </div>
                     <div class="row" *ngIf="!getsubcategories(i)?.controls?.length">
                         <div class="col-25">
-                            <label for="amout">Amount</label>
+                            <label for="amout">Price</label>
                         </div>
                         <div class="col-75">
                             <input type="number" id="amout" name="amout" placeholder="Enter amount in numbers.."

@@ -9,6 +9,7 @@ import {
 } from '../utils/utils';
 import { FormService } from '../utils/form.service';
 import { UtilsService } from '../utils/utils.service';
+import { from, groupBy, map, mergeMap, reduce } from 'rxjs';
 
 @Component({
   selector: 'app-add-things',
@@ -131,7 +132,7 @@ export class AddThingsComponent {
 
   removeControl(i: number, j?: any, k?: any) {
     if (k != undefined) {
-      if (j == 0) {
+      if (k == 0) {
         this.updateFormField(this.getControl(this.getsubcategories(i).at(j) as FormGroup, 'subcategorey'));
       }
       this.gettos(i, j).removeAt(k)
@@ -161,17 +162,19 @@ export class AddThingsComponent {
 
   checkSomeKey(fKey: string, i: number, j: number): any {
     if (fKey == "Credit Card") this.sendCreditCard = true;
-    if (['Sent', "Give"].includes(fKey)) this.handletoSelection(i, j);
+    if (['Sent', "Give", "Get"].includes(fKey)) this.handletoSelection(i, j);
   }
 
   onSubmit() {
     let inputs = this.formService.removeEmpty(this.thingsForm.getRawValue(), this.creditCardEntry.bind(this));
+    let data = this.groupKeys(inputs);
+    console.log(data)
     if (this.isEditMode) {
-      delete inputs._id;
-      this.utils.commonPut(inputs, 'expense', 'update').subscribe(() => {
+      delete data._id;
+      this.utils.commonPut(data, 'expense', 'update').subscribe(() => {
         if (this.creditCardPayAmount && !this.isCreditAmountExists) {
           // delete credit card pay entry.
-          this.utils.commonDelete('creditcardpay', 'delete', inputs.date).subscribe(() => {
+          this.utils.commonDelete('creditcardpay', 'delete', data.date).subscribe(() => {
             console.log("Successfully deleted credit card entry...");
             this.goto();
           });
@@ -180,10 +183,51 @@ export class AddThingsComponent {
         }
       });
     } else {
-      this.utils.commonPost(inputs, 'expense', 'add').subscribe(() => {
+      this.utils.commonPost(data, 'expense', 'add').subscribe(() => {
         this.goto();
       });
     }
+  }
+
+  groupKeys(res: any) {
+    const temp: any[] = [];
+    const values$ = from(res.things).pipe(
+      groupBy((obj: any) => obj.categorey),
+      mergeMap(group$ => group$.pipe(
+        reduce((acc: any, cur: any) => (acc.categorey_value ? acc.categorey_value += cur.categorey_value : (acc.subcategories ? acc.subcategories = acc.subcategories.concat(cur.subcategories) : (acc = { ...acc, ...cur })), acc), {})
+      )),
+      map(obj => {
+        let subTemp: any[] = [];
+        if (obj.subcategories) {
+          const sub$ = from(obj.subcategories).pipe(
+            groupBy((obj: any) => obj.subcategorey),
+            mergeMap(group$ => group$.pipe(
+              reduce((acc: any, cur: any) => ((acc.subcategorey && !acc.to) ? acc.subcategorey_value += cur.subcategorey_value : (acc.to ? acc.to = acc.to.concat(cur.to) : (acc = { ...acc, ...cur })), acc), {})
+            )),
+            map(val => {
+              if (val.to) {
+                const to$ = from(val.to).pipe(
+                  groupBy((obj1: any) => obj1.person),
+                  mergeMap(grp$ => grp$.pipe(
+                    reduce((acc: any, cur: any) => (acc.person ? acc.amount += cur.amount : acc = { ...acc, ...cur }, acc), {})
+                  ))
+                );
+                let tem: any = [];
+                to$.subscribe(val1 => tem.push(val1));
+                val.to = tem;
+              }
+              return val;
+            })
+          )
+          sub$.subscribe(val => subTemp.push(val));
+          obj.subcategories = subTemp;
+        };
+        return obj;
+      })
+    );
+    values$.subscribe(val => temp.push(val));
+    res.things = temp;
+    return res;
   }
 
   creditCardEntry(data: any) {
