@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { PaginationService } from '../common/pagination.service';
-import { ICalender, calList, monthList } from '../utils/utils';
+import { ICalender, calList, groupKeys, monthList, yearList } from '../utils/utils';
 import { UtilsService } from '../utils/utils.service';
 
 @Component({
@@ -10,42 +10,34 @@ import { UtilsService } from '../utils/utils.service';
   styleUrls: ['./spend-list.component.css']
 })
 export class SpendListComponent {
-  listToShow: [] = [];
-  calList: any = calList;
-  currentMonth: string = '';
+  listToShow: any[] = [];
+  calList: any[] = calList;
+  years: any[] = yearList
+  currentMonth: string;
+  currentCal: string;
+  currentYear: number;
   @ViewChild("topnav")
   topNav!: ElementRef;
 
   constructor(private utils: UtilsService, private router: Router, private paging: PaginationService) { 
     this.currentMonth = this.paging.currentMonth;
+    this.currentCal = this.paging.currentCal;
+    this.currentYear = this.paging.currentYear;
   }
 
   ngOnInit() {
     this.getList();
-    this.orderCalList();
   }
 
   private getList() {
     let obj: ICalender = {
       type: this.currentCal.toLowerCase(),
       month: ["Day", "Week"].includes(this.currentCal) ? monthList.indexOf(this.currentMonth) + 1 : 0,
-      year: 0
+      year: this.currentYear
     }
     this.utils.commonGet('expense', 'list', obj).subscribe(res => {
       res.forEach((val: any) => {
-        val.things.forEach((item: any) => {
-          if (item.subcategories) {
-            const result = Object.values(item.subcategories.reduce((r: any, o: any) => (r[o.subcategorey]
-              ? (r[o.subcategorey].subcategorey_value ? r[o.subcategorey].subcategorey_value += o.subcategorey_value : (o.to.forEach((val: any) => {
-                let index = r[o.subcategorey].to.findIndex((oVal: any) => oVal.person == val.person);
-                if (index>=0) {
-                  r[o.subcategorey].to[index].amount += val.amount;
-                } else r[o.subcategorey].to.push(val);
-              })))
-              : (r[o.subcategorey] = { ...o }), r), {}));
-            item.subcategories = result;
-          }
-        });
+        val = groupKeys(val);
       });
       this.listToShow = res;
     })
@@ -64,22 +56,18 @@ export class SpendListComponent {
     }
   }
 
-  public activeCal(cal: string, callBackFn: any) {
-    if (this.currentCal == cal) return;
-    this.paging.currentCal = cal;
-    this.orderCalList();
-    callBackFn;
+  public activeCal() {
+    if (this.paging.currentCal == this.currentCal) return;
+    this.paging.currentCal = this.currentCal;
 
     this.getList();
   }
 
-  get currentCal() {
-    return this.paging.currentCal;
-  }
+  public activeYr() {
+    if (this.paging.currentYear == this.currentYear) return;
+    this.paging.currentYear = this.currentYear;
 
-  orderCalList() {
-    this.calList.unshift(this.currentCal);
-    this.calList = [...new Set(this.calList)]
+    this.getList();
   }
 
   shownonSubCategorey(items: any[]) {

@@ -9,6 +9,7 @@ export class PaginationService {
   public monthList: any[] = monthList;
   public currentMonth: string = new Date().toLocaleString('default', { month: 'short' });
   public currentCal: string = "Day";
+  public currentYear: number = 2023;
   public paginationList: Map<number, Array<any>>=  new Map<number, Array<any>>();
   public renderedQuarter: number = 0;
 

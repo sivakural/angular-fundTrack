@@ -1,12 +1,18 @@
 <div class="list">
     <div class="topnav" #topNav id="myTopnav">
-        <ng-container *ngFor="let cal of calList; let i = index">
-            <a [ngClass]="currentCal==cal?'active':''" (click)="activeCal(cal, handleClass(topNav))">{{cal}}</a>
-        </ng-container>
-        <a class="split">
-            <button class="addnewBtn" routerLink="/creditCard-list">Credit Card</button>
+        <a class="select common">
+            <select class="year" name="calender" id="calender" (change)="activeCal()"
+                [(ngModel)]="currentCal">
+                <option *ngFor="let cal of calList; let i = index" [value]="cal">{{ cal }}</option>
+            </select>
+            <select class="year" name="year" id="year" (change)="activeYr()"
+                [(ngModel)]="currentYear">
+                <option *ngFor="let yr of years; let i = index" [value]="yr">{{ yr }}</option>
+            </select>
         </a>
-        <a class="split">
+        <a class="common" routerLink="/creditCard-list">Credit Card</a>
+        <a class="common" routerLink="/loans">Loans</a>
+        <a class="common split">
             <button class="addnewBtn" routerLink="/addthings">Add new</button>
         </a>
         <a href="javascript:void(0);" class="icon" (click)="handleClass(topNav)">
@@ -31,7 +37,7 @@
         <tbody>
             <ng-container *ngFor="let list of listToShow;let i=index">
                 <tr (click)="gotoEdit(list['date'], contentRef)">
-                    <td style="color: green;">{{ list["date"] | date: 'dd/MM' }}</td>
+                    <td style="color: green;">{{ list["date"] | date: (currentCal=='Year' ? 'yyyy' : 'dd/MM') }}</td>
                     <td style="word-wrap: break-word;">{{ list['things'] | converterString }}</td>
                     <td style="color: palevioletred; word-wrap: break-word;">{{ list['things'] | converterNumber |
                         currency: 'INR' : 'symbol' : '1.0-0' }}</td>

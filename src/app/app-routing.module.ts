@@ -6,6 +6,7 @@ import { ListComponent } from './credit-card/list/list.component';
 import { SpendListComponent } from './spend-list/spend-list.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
+import { PersonalLoanlistComponent } from './loans/personal-loanlist/personal-loanlist.component';
 
 const routes: Routes = [
   { path: '', redirectTo: "/management", pathMatch: 'full' },
@@ -16,7 +17,8 @@ const routes: Routes = [
   { path: "updatethings", title: "Edit Things Component", component: AddThingsComponent },
   { path: 'creditCard-list', title: 'Show credit card list', component: ListComponent },
   { path: "addCredit", title: "Add Credit Card expenses", component: AddComponent },
-  { path: 'updateCredit', title: "Edit Credit card", component: AddComponent }
+  { path: 'updateCredit', title: "Edit Credit card", component: AddComponent },
+  { path: 'loans', title: 'List of personal loans due', component: PersonalLoanlistComponent }
 ];
 
 @NgModule({

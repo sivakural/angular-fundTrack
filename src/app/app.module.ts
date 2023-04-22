@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -27,6 +27,7 @@ import { HostDirective } from './directives/host.directive';
 // interceptors
 import { AuthInterceptor } from './interceptor/auth-interceptor';
 import { LoaderInterceptor } from './common/loader/loader.interceptor';
+import { PersonalLoanlistComponent } from './loans/personal-loanlist/personal-loanlist.component';
 
 @NgModule({
   declarations: [
@@ -43,13 +44,15 @@ import { LoaderInterceptor } from './common/loader/loader.interceptor';
     AddComponent,
     PaginationComponent,
     ConfirmationDialogComponent,
-    HostDirective
+    HostDirective,
+    PersonalLoanlistComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

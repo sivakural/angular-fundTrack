@@ -1,0 +1,59 @@
+table {
+    margin-top: 5px;
+    border-collapse: collapse;
+    width: 100%;
+    text-align: left;
+    display: block;
+    overflow-x: auto;
+    table-layout: fixed;
+}
+
+thead {
+    text-align: center;
+}
+
+tr {
+    border-bottom: 1px solid #ddd;
+    line-height: 18px;
+    text-align: center;
+}
+
+tr:hover {
+    background-color: #D6EEEE;
+}
+
+.noRecord {
+    color: #783434
+}
+
+.topnav {
+    background-color: #f2f2f2;
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+.creditDetails {
+    font-size: 12px;
+    margin-top: 12px;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+    table {
+        font-size: 12px;
+    }
+
+    .dateHeaded {
+        width: 10%;
+    }
+
+    .purchaseHeaded {
+        width: 70%;
+    }
+
+    .totalHeaded {
+        width: 10%;
+    }
+}

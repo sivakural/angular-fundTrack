@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { user, expense, creditcardpay, creditcarduse } from './utils';
+import { user, expense, creditcardpay, creditcarduse, personaloan } from './utils';
 import { AlertService } from '../common/alert/alert.service';
 
 @Injectable({
@@ -41,6 +41,9 @@ export class UtilsService {
         break;
       case 'creditcardpay':
         url = creditcardpay[url]
+        break;
+      case 'personaloan':
+        url = personaloan[url]
         break;
       default:
         url = creditcarduse[url]
@@ -85,7 +88,7 @@ export class UtilsService {
       this.alert.triggerAlert(error.error);
       return throwError(() => error);
     }
-    
+
     let stringMsg = 'Something bad happened; please try again later.';
     this.alert.triggerAlert(stringMsg);
     return throwError(() => new Error(stringMsg));

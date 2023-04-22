@@ -5,11 +5,12 @@ import { Location } from '@angular/common';
 import {
   expenses,
   formatDate,
+  groupKeys,
   keyIncludes
 } from '../utils/utils';
 import { FormService } from '../utils/form.service';
 import { UtilsService } from '../utils/utils.service';
-import { from, groupBy, map, mergeMap, reduce } from 'rxjs';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-add-things',
@@ -22,8 +23,10 @@ export class AddThingsComponent {
   isEditMode: boolean = false;
   sendCreditCard: boolean = false;
   isCreditAmountExists: boolean = false;
+  isloanAmountExists: boolean = false;
 
   creditCardPayAmount: number = 0;
+  personaLoanAmount: number = 0;
   today: string = new Date().toJSON().split('T')[0];
 
   thingsForm: FormGroup = this.fb.group({
@@ -36,14 +39,15 @@ export class AddThingsComponent {
   ngOnInit() {
     this.route.queryParams.subscribe((params: any) => {
       if (params.selectedDate) {
-        this.utils.commonGet('expense', 'get', { date: params.selectedDate }).subscribe(res => {
-          this.thingsForm = this.formService.deriveForm(res, 'thingsForm');
+        forkJoin({
+          reqOne: this.utils.commonGet('expense', 'get', { date: params.selectedDate }),
+          reqTwo: this.utils.commonGet('creditcardpay', 'get', { date: params.selectedDate }),
+          reqThree: this.utils.commonGet('personaloan', 'get', { date: params.selectedDate })
+        }).subscribe(({ reqOne, reqTwo, reqThree }) => {
+          this.thingsForm = this.formService.deriveForm(reqOne, 'thingsForm');
           this.isEditMode = true;
-          this.utils.commonGet('creditcardpay', 'get', { date: params.selectedDate }).subscribe(data => {
-            if (data) {
-              this.creditCardPayAmount = data.amount;
-            }
-          })
+          if (reqTwo) { this.creditCardPayAmount = reqTwo.amount };
+          if (reqThree) { this.personaLoanAmount = reqThree.amount };
         })
       } else {
         this.addthings();
@@ -161,21 +165,24 @@ export class AddThingsComponent {
   }
 
   checkSomeKey(fKey: string, i: number, j: number): any {
-    if (fKey == "Credit Card") this.sendCreditCard = true;
     if (['Sent', "Give", "Get"].includes(fKey)) this.handletoSelection(i, j);
   }
 
   onSubmit() {
-    let inputs = this.formService.removeEmpty(this.thingsForm.getRawValue(), this.creditCardEntry.bind(this));
-    let data = this.groupKeys(inputs);
+    let inputs = this.formService.removeEmpty(this.thingsForm.getRawValue(), this.creditCardEntry.bind(this), this.loanEntry.bind(this));
+    let data = groupKeys(inputs);
     console.log(data)
     if (this.isEditMode) {
       delete data._id;
       this.utils.commonPut(data, 'expense', 'update').subscribe(() => {
         if (this.creditCardPayAmount && !this.isCreditAmountExists) {
           // delete credit card pay entry.
-          this.utils.commonDelete('creditcardpay', 'delete', data.date).subscribe(() => {
-            console.log("Successfully deleted credit card entry...");
+          this.utils.commonDelete('creditcardpay', 'delete', { date: data.date }).subscribe(() => {
+            this.isloanAmountExists ? this.goto() : '';
+          });
+        } else if (this.personaLoanAmount && !this.isloanAmountExists) {
+          // delete loan entry.
+          this.utils.commonDelete('personaloan', 'delete', { date: data.date }).subscribe(() => {
             this.goto();
           });
         } else {
@@ -189,59 +196,32 @@ export class AddThingsComponent {
     }
   }
 
-  groupKeys(res: any) {
-    const temp: any[] = [];
-    const values$ = from(res.things).pipe(
-      groupBy((obj: any) => obj.categorey),
-      mergeMap(group$ => group$.pipe(
-        reduce((acc: any, cur: any) => (acc.categorey_value ? acc.categorey_value += cur.categorey_value : (acc.subcategories ? acc.subcategories = acc.subcategories.concat(cur.subcategories) : (acc = { ...acc, ...cur })), acc), {})
-      )),
-      map(obj => {
-        let subTemp: any[] = [];
-        if (obj.subcategories) {
-          const sub$ = from(obj.subcategories).pipe(
-            groupBy((obj: any) => obj.subcategorey),
-            mergeMap(group$ => group$.pipe(
-              reduce((acc: any, cur: any) => ((acc.subcategorey && !acc.to) ? acc.subcategorey_value += cur.subcategorey_value : (acc.to ? acc.to = acc.to.concat(cur.to) : (acc = { ...acc, ...cur })), acc), {})
-            )),
-            map(val => {
-              if (val.to) {
-                const to$ = from(val.to).pipe(
-                  groupBy((obj1: any) => obj1.person),
-                  mergeMap(grp$ => grp$.pipe(
-                    reduce((acc: any, cur: any) => (acc.person ? acc.amount += cur.amount : acc = { ...acc, ...cur }, acc), {})
-                  ))
-                );
-                let tem: any = [];
-                to$.subscribe(val1 => tem.push(val1));
-                val.to = tem;
-              }
-              return val;
-            })
-          )
-          sub$.subscribe(val => subTemp.push(val));
-          obj.subcategories = subTemp;
-        };
-        return obj;
-      })
-    );
-    values$.subscribe(val => temp.push(val));
-    res.things = temp;
-    return res;
-  }
-
   creditCardEntry(data: any) {
     let _self = this;
-    _self.isCreditAmountExists = true;
-    if (_self.sendCreditCard && data && data.subcategorey && (_self.creditCardPayAmount != data.subcategorey_value)) {
+    if ((_self.creditCardPayAmount != data.subcategorey_value) && !_self.isCreditAmountExists) {
       let obj = {
         date: _self.thingsForm.value.date,
         amount: data.subcategorey_value,
         mode: "pay"
       }
       this.utils.commonPost(obj, 'creditcardpay', 'add').subscribe(() => {
+        _self.isCreditAmountExists = true;
         console.log("Successfully added credit card pay..");
       })
+    }
+  }
+
+  loanEntry(data: any) {
+    let _self = this;
+    if ((_self.personaLoanAmount != data.subcategorey_value) && !_self.isloanAmountExists) {
+      let obj = {
+        date: _self.thingsForm.getRawValue().date,
+        amount: data.subcategorey_value
+      }
+      this.utils.commonPost(obj, 'personaloan', 'add').subscribe(() => {
+        _self.isloanAmountExists = true;
+        console.log("Successfully added personal loan..");
+      });
     }
   }
 

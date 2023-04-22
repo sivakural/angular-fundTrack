@@ -8,16 +8,17 @@ import { formKeys, formatDate } from './utils';
 export class FormService {
   constructor(private fb: FormBuilder) { }
 
-  public removeEmpty(list: any, callBack: Function) {
+  public removeEmpty(list: any, callBack: Function, callBack1: Function) {
     if (Array.isArray(list)) {
       list.forEach((obj) => {
-        this.removeEmpty(obj, callBack);
+        this.removeEmpty(obj, callBack, callBack1);
       })
     } else if (typeof list === "object") {
       for (let prop in list) {
         if (list[prop] == "") { delete list[prop] }
         else if (list[prop] == "Credit Card") { callBack(list) }
-        else { this.removeEmpty(list[prop], callBack) }
+        else if (list[prop] == 'Personal loan') { callBack1(list) }
+        else { this.removeEmpty(list[prop], callBack, callBack1) }
       }
     }
     return list;
