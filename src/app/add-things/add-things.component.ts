@@ -198,14 +198,14 @@ export class AddThingsComponent {
 
   creditCardEntry(data: any) {
     let _self = this;
-    if ((_self.creditCardPayAmount != data.subcategorey_value) && !_self.isCreditAmountExists) {
+    _self.isCreditAmountExists = true;
+    if (_self.creditCardPayAmount != data.subcategorey_value) {
       let obj = {
-        date: _self.thingsForm.value.date,
+        date: _self.thingsForm.getRawValue().date,
         amount: data.subcategorey_value,
         mode: "pay"
       }
       this.utils.commonPost(obj, 'creditcardpay', 'add').subscribe(() => {
-        _self.isCreditAmountExists = true;
         console.log("Successfully added credit card pay..");
       })
     }
@@ -213,13 +213,13 @@ export class AddThingsComponent {
 
   loanEntry(data: any) {
     let _self = this;
-    if ((_self.personaLoanAmount != data.subcategorey_value) && !_self.isloanAmountExists) {
+    _self.isloanAmountExists = true;
+    if (_self.personaLoanAmount != data.subcategorey_value) {
       let obj = {
         date: _self.thingsForm.getRawValue().date,
         amount: data.subcategorey_value
       }
-      this.utils.commonPost(obj, 'personaloan', 'add').subscribe(() => {
-        _self.isloanAmountExists = true;
+      this.utils.commonPost(obj, 'personaloan', 'add').subscribe(() => {        
         console.log("Successfully added personal loan..");
       });
     }
